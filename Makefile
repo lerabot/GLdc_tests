@@ -20,7 +20,7 @@ rm-elf:
 
 $(TARGET): $(OBJS) $(REAP_LIBS) romdisk.o
 	$(KOS_CC) $(KOS_CFLAGS) $(KOS_LDFLAGS) -o $(TARGET) $(KOS_START) \
-		$(OBJS) $(REAP_LIBS) romdisk.o $(OBJEXTRA) -lpng -llua -lGLdc -lmp3 -loggvorbisplay -lvorbis -logg -lm -lz  $(KOS_LIBS)
+		$(OBJS) $(REAP_LIBS) romdisk.o $(OBJEXTRA) -lpng -llua -lGLdc -lm -lz  $(KOS_LIBS)
 
 #make a bunch of romdisk here
 romdisk.img:

@@ -19,10 +19,86 @@ player    p1;
 font      courrier;
 float     displayPos[3] = {0,0,0};
 long      frameCount = 0;
-lua_State *t_data;
-lua_State *L;
 
 texture t;
+
+static GLfloat rtri;    /* Rotation angle for the triangle */
+static GLfloat rquad;   /* Rotation angle for the quad */
+
+void draw_gl(void) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glLoadIdentity();
+    glTranslatef(-1.5f, 0.0f, -6.0f);
+    glRotatef(rtri, 0.0f, 1.0f, 0.0f);
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glEnd();
+
+    glLoadIdentity();
+    glTranslatef(1.5f, 0.0f, -7.0f);
+    glRotatef(rquad, 1.0f, 1.0f, 1.0f);
+
+    glBegin(GL_QUADS);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, 1.0f);
+    glVertex3f(1.0f, 1.0f, 1.0f);
+    glColor3f(1.0f, 0.5f, 0.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(1.0f, 1.0f, 1.0f);
+    glVertex3f(-1.0f, 1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+    glVertex3f(1.0f, 1.0f, -1.0f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(-1.0f, 1.0f, 1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glColor3f(1.0f, 0.0f, 1.0f);
+    glVertex3f(1.0f, 1.0f, -1.0f);
+    glVertex3f(1.0f, 1.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glEnd();
+
+    rtri += 0.2f;
+    rquad -= 0.15f;
+}
 
 void draw_quad(texture *tex, float x, float y) {
 	GLfloat texW = tex->w * tex->uSize * tex->xScale;
@@ -99,10 +175,17 @@ void draw_quad(texture *tex, float x, float y) {
 	glDisableClientState(GL_COLOR_ARRAY);
 }
 
-int main()
-{
+int main() {
   glKosInit();
 	enableTrans();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0f, 640.0f / 480.0f, 0.1f, 100.0f);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	/*
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 	//glFrustum(0.0, 640.0, 0.0, 480.0, -10.0, 10.0);
@@ -110,22 +193,15 @@ int main()
   //glScalef(1.f/320.f, 1.f/240.f, 100.f);
   //glTranslatef(-320, -240, 0);
   //glOrtho(0, 640, 0, 480, -50, 50);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
   glDisable(GL_CULL_FACE);
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_LIGHTING);
+	*/
 
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-
-  //sounds stuff
-  snd_stream_init();
-  sndoggvorbis_init();
-  //mp3_init();
-
-  setLuaState(&L);
-  setLuaState(&t_data);
+  //glEnable(GL_LIGHTING);
+  //glEnable(GL_LIGHT0);
 
   p1 = initPlayer(0);
   loadFont("/rd/DFKei.png");
@@ -140,13 +216,8 @@ int main()
   //png_to_gl_texture(&t, "/rd/DFKei.png");
   setInt(1, glIsTexture(t.id));
 
-
-  uint64_t b, e;
-  double avg;
-  char buf[24];
   while(game_active)
   {
-    b =  timer_us_gettime64();
 
 		/*
     if (tempScene != currentScene) {
@@ -162,11 +233,12 @@ int main()
     //glPushMatrix();
     //glTranslated((int)displayPos[0], (int)displayPos[1], displayPos[2]);
 
-		glDisable(GL_CULL_FACE);
-	  glDisable(GL_DEPTH_TEST);
-	  glDisable(GL_LIGHTING);
+		//glDisable(GL_CULL_FACE);
+	  //glDisable(GL_DEPTH_TEST);
+	  //glDisable(GL_LIGHTING);
 
-		draw_quad(&t, 320, 240);
+		draw_gl();
+		//draw_quad(&t, 320, 240);
 
 
 		//drawCursor();
@@ -195,9 +267,8 @@ int main()
     if(buttonPressed(CONT_Y))
       game_active = 0;
 
-    e =  timer_us_gettime64();
-    avg = (double)(e - b)/1000;
     if (frameCount % 30 == 0) {
+			char buf[24];
       sprintf(buf, "Frame:%.4f", stats.frame_rate);
       //setParam(2, buf);
     }

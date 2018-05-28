@@ -7,11 +7,7 @@
 #include <png/png.h>
 #include <zlib/zlib.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <malloc.h>
-#include <oggvorbis/sndoggvorbis.h>
-#include <mp3/sndserver.h>
 
 #include "lua.h"
 #include "lauxlib.h"
@@ -26,16 +22,4 @@
 #include "lib/game_object.h" //vital
 #include "lib/gl_png.h"
 #include "lib/scene.h"
-#include "lib/tilemap.h"
 #include "lib/player.h"
-#include "lib/particule.h"
-
-/////////////////////////
-//test shit
-
-#include "scene_menu.h"
-#include "scene_temple.h"
-#include "scene_soussol.h"
-#include "scene_jardin.h"
-#include "scene_desert.h"
-#include "scene_test.h"
