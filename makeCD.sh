@@ -2,7 +2,7 @@
 #automating script for making CD games
 
 DIR=$PWD
-PROJECT_NAME="reaperi_workbuild_v2"
+PROJECT_NAME="GLDC_tests"
 
 # go to  build directory
 # make clean
